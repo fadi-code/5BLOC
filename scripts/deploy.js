@@ -1,21 +1,27 @@
+const hre = require("hardhat");
+
 async function main() {
-    const [deployer] = await ethers.getSigners();
+    const [deployer] = await hre.ethers.getSigners();
     console.log("Deploying contracts with the account:", deployer.address);
 
-    // Déployer FootballTeam
-    const FootballTeam = await ethers.getContractFactory("FootballTeam");
-    const footballTeam = await FootballTeam.deploy();
-    console.log("FootballTeam contract deployed to:", footballTeam.address);
+    try {
+        // Déployer FootballTeam
+        const FootballTeam = await hre.ethers.getContractFactory("FootballTeam");
+        const footballTeam = await FootballTeam.deploy();
+        await footballTeam.deployed();
+        console.log("✅ FootballTeam contract deployed to:", footballTeam.address);
 
-    // Déployer PlayerNFT
-    const PlayerNFT = await ethers.getContractFactory("PlayerNFT");
-    const playerNFT = await PlayerNFT.deploy();
-    console.log("PlayerNFT contract deployed to:", playerNFT.address);
+        // Déployer PlayerNFT
+        const PlayerNFT = await hre.ethers.getContractFactory("PlayerNFT");
+        const playerNFT = await PlayerNFT.deploy();
+        await playerNFT.deployed();
+        console.log("✅ PlayerNFT contract deployed to:", playerNFT.address);
+
+    } catch (error) {
+        console.error("🚨 Erreur lors du déploiement:", error);
+        process.exit(1);
+    }
 }
 
-main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error(error);
-        process.exit(1);
-    });
+// Exécution du script
+main().then(() => process.exit(0));
