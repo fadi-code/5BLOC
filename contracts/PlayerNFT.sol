@@ -13,7 +13,8 @@ contract PlayerNFT is ERC721URIStorage, Ownable {
     event PlayerMinted(uint256 playerId, address team, string metadata);
     event PlayerTransferred(uint256 playerId, address from, address to);
 
-    constructor() ERC721("FootballPlayerNFT", "FPNFT") {}
+    // Le constructeur appelle le constructeur d'Ownable et lui passe l'adresse du déployeur
+    constructor() ERC721("FootballPlayerNFT", "FPNFT") Ownable() {}
 
     function mintPlayer(address team, string memory metadataURI) external onlyOwner {
         uint256 playerId = nextPlayerId;

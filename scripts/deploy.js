@@ -1,18 +1,21 @@
-const { ethers } = require("hardhat");
-
 async function main() {
+    const [deployer] = await ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
+
+    // Déployer FootballTeam
     const FootballTeam = await ethers.getContractFactory("FootballTeam");
     const footballTeam = await FootballTeam.deploy();
-    await footballTeam.deployed();
-    console.log("FootballTeam deployed to:", footballTeam.address);
+    console.log("FootballTeam contract deployed to:", footballTeam.address);
 
+    // Déployer PlayerNFT
     const PlayerNFT = await ethers.getContractFactory("PlayerNFT");
     const playerNFT = await PlayerNFT.deploy();
-    await playerNFT.deployed();
-    console.log("PlayerNFT deployed to:", playerNFT.address);
+    console.log("PlayerNFT contract deployed to:", playerNFT.address);
 }
 
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+        console.error(error);
+        process.exit(1);
+    });

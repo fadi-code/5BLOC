@@ -16,6 +16,9 @@ contract FootballTeam is Ownable {
     event TeamCreated(address indexed owner, string name);
     event PlayerAdded(address indexed team, uint256 playerId);
 
+    // Le constructeur appelle correctement Ownable
+    constructor() Ownable() {}
+
     function createTeam(string memory name) external {
         require(teams[msg.sender].owner == address(0), "Team already exists");
         teams[msg.sender] = Team(name, msg.sender, 0);
