@@ -8,14 +8,14 @@ async function main() {
         // Déployer FootballTeam
         const FootballTeam = await hre.ethers.getContractFactory("FootballTeam");
         const footballTeam = await FootballTeam.deploy();
-        await footballTeam.deployed();
-        console.log("✅ FootballTeam contract deployed to:", footballTeam.address);
+        await footballTeam.waitForDeployment(); // 🔹 Utiliser waitForDeployment()
+        console.log("✅ FootballTeam contract deployed to:", await footballTeam.getAddress());
 
         // Déployer PlayerNFT
         const PlayerNFT = await hre.ethers.getContractFactory("PlayerNFT");
         const playerNFT = await PlayerNFT.deploy();
-        await playerNFT.deployed();
-        console.log("✅ PlayerNFT contract deployed to:", playerNFT.address);
+        await playerNFT.waitForDeployment();
+        console.log("✅ PlayerNFT contract deployed to:", await playerNFT.getAddress());
 
     } catch (error) {
         console.error("🚨 Erreur lors du déploiement:", error);
@@ -23,5 +23,10 @@ async function main() {
     }
 }
 
-// Exécution du script
-main().then(() => process.exit(0));
+// Exécuter le script
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+        console.error("🚨 Une erreur s'est produite:", error);
+        process.exit(1);
+    });
