@@ -14,12 +14,12 @@ contract SimplePlayerCard is ERC721, Ownable {
     }
 
     mapping(uint256 => Card) public cards;
-    uint256 private _nextCardId;
+    uint256 public cardCount; // ✅ Nombre total de cartes créées
 
     address private admin; // ✅ Adresse de l'admin
 
     constructor() ERC721("SimplePlayerCard", "SPC") {
-        admin = msg.sender; // ✅ Définit automatiquement l'admin comme le premier compte Hardhat
+        admin = msg.sender; // ✅ Définit l'admin au premier déploiement
     }
 
     modifier onlyAdmin() {
@@ -33,8 +33,8 @@ contract SimplePlayerCard is ERC721, Ownable {
         string memory _value,
         string memory _hash
     ) public onlyAdmin {
-        uint256 cardId = _nextCardId;
-        _nextCardId++;
+        cardCount++; // ✅ Incrémente le compteur de cartes
+        uint256 cardId = cardCount;
 
         cards[cardId] = Card({
             name: _name,
@@ -49,5 +49,11 @@ contract SimplePlayerCard is ERC721, Ownable {
 
     function getAdmin() public view returns (address) {
         return admin;
+    }
+
+    function getCard(uint256 cardId) public view returns (string memory, string memory, string memory, string memory, uint256) {
+        require(cardId > 0 && cardId <= cardCount, "Carte non existante");
+        Card memory card = cards[cardId];
+        return (card.name, card.cardType, card.value, card.hash, card.createdAt);
     }
 }

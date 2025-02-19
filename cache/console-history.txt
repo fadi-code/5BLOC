@@ -1,3 +1,8 @@
+const tc = await ct.cardCount();
+const totalCards = await ct.cardCount();
+const totalCards = await contract.cardCount();
+const ct = await ethers.getContractAt("SimplePlayerCard", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
+const contract = await ethers.getContractAt("SimplePlayerCard", "0xYourContractAddress");
 console.log(y)
 const y = await z.getAdmin()
 const z = await ethers.getContractAt("SimplePlayerCard", "0x5FbDB2315678afecb367f032d93F642f64180aa3");

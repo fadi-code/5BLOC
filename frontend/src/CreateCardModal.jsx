@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import { ethers } from "ethers";
-import { contractAddress, pinataApiKey, pinataSecretApiKey } from "./config";
+import { contractAddress, jwt } from "./config";
 import PlayerCardABI from "./SimplePlayerCard.json";
 
 const CreateCardModal = ({ isOpen, closeModal }) => {
@@ -16,20 +16,34 @@ const CreateCardModal = ({ isOpen, closeModal }) => {
   };
 
   const uploadToIPFS = async () => {
-    const formData = new FormData();
-    formData.append("file", image);
+    console.log(jwt);
+    try {
+      const formData = new FormData();
+      formData.append("file", image); // L’image sélectionnée par l’utilisateur
+  
+      const request = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJjY2Q2YTVkNC05ZmI4LTRlMTgtOWI1ZC1hNjg4MDliYjQ5Y2YiLCJlbWFpbCI6Im1lZG91c2UxNUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJGUkExIn0seyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJOWUMxIn1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiY2VjMjQ5MTI1YjM2M2IwODBhZmEiLCJzY29wZWRLZXlTZWNyZXQiOiI5ZWQxOGIwNjJjYmY2OWRmMWI5MzE3YjEzODE0ZDZkODU2Y2QyMzY4MTg2ZGUyYjM4OGE5MWU1MzFlNWQ0MDlmIiwiZXhwIjoxNzcxNTMyMjMwfQ.5OkLpJf2H7xCQ6reTtemJcvlhrwr_RbJxrv_-sKvK08`,
+        },
+        body: formData,
+      });
 
-    const response = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
-      method: "POST",
-      headers: {
-        "pinata_api_key": pinataApiKey,
-        "pinata_secret_api_key": pinataSecretApiKey,
-      },
-      body: formData,
-    });
+      console.log("Envoi de l'image à IPFS...");
+      console.log(request);
 
-    const data = await response.json();
-    return `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`;
+  
+      if (!request.ok) {
+        console.error("🚨 Erreur lors de l'upload IPFS :", await request.text());
+        throw new Error("Échec de l'upload IPFS");
+      }
+  
+      const response = await request.json();
+      console.log("Upload réussi :", response);
+      return `https://gateway.pinata.cloud/ipfs/${response.IpfsHash}`;
+    } catch (error) {
+      console.error(" Erreur lors de l'upload IPFS :", error);
+    }
   };
 
   const createCard = async () => {
