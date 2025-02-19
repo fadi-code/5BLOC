@@ -1,33 +1,41 @@
+require("dotenv").config();
 const hre = require("hardhat");
 
 async function main() {
-    const [deployer] = await hre.ethers.getSigners();
+    const accounts = await hre.ethers.getSigners(); // Récupérer tous les comptes disponibles
+
+    // Récupérer l'index du compte dans le fichier .env
+    const accountIndex = process.env.ACCOUNT_INDEX ? parseInt(process.env.ACCOUNT_INDEX) : 0;
+    
+    if (accountIndex >= accounts.length) {
+        console.error("🚨 Index de compte invalide !");
+        return;
+    }
+
+    const deployer = accounts[accountIndex]; // Utiliser un autre compte
     console.log("🚀 Utilisation du compte:", deployer.address);
 
-    const contractAddress = "ADRESSE_DU_CONTRAT_FOOTBALLTEAM"; // Remplace par l'adresse du contrat déployé
+    const contractAddress = process.env.FOOTBALL_TEAM_CONTRACT_ADDRESS;
     const FootballTeam = await hre.ethers.getContractAt("FootballTeam", contractAddress);
 
-    const teamName = "PSG"; // Change le nom de l'équipe si nécessaire
+    const teamName = process.env.TEAM_NAME || `Team_${deployer.address.substring(0, 6)}`; // Nom unique si non fourni
 
-    try {
-        const existingTeam = await FootballTeam.getTeamByName(teamName);
-        if (existingTeam !== "0x0000000000000000000000000000000000000000") {
-            console.log(`✅ L'équipe ${teamName} existe déjà.`);
-            return;
-        }
-
-        console.log(`Création de l'équipe ${teamName}...`);
-        const tx = await FootballTeam.createTeam(teamName);
-        await tx.wait();
-        console.log(`✅ Équipe ${teamName} créée avec succès.`);
-    } catch (error) {
-        console.error("🚨 Erreur lors de la création de l'équipe:", error);
+    // Vérifier si l'équipe existe déjà
+    const existingTeamAddress = await FootballTeam.getTeamByName(teamName);
+    
+    if (existingTeamAddress !== "0x0000000000000000000000000000000000000000") {
+        console.log(`✅ L'équipe ${teamName} existe déjà à l'adresse: ${existingTeamAddress}`);
+        return; 
     }
+
+    // Création de l'équipe
+    console.log(`🏗 Création de l'équipe ${teamName}...`);
+    const tx = await FootballTeam.connect(deployer).createTeam(teamName);
+    await tx.wait();
+    console.log(`✅ Équipe ${teamName} créée avec succès.`);
 }
 
-main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error("🚨 Erreur:", error);
-        process.exit(1);
-    });
+main().catch((error) => {
+    console.error("🚨 Erreur:", error);
+    process.exit(1);
+});

@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\fadid\\OneDrive\\Bureau\\5BLOC\\contracts\\FootballTeam.sol": {
-      "lastModificationDate": 1739911475212,
-      "contentHash": "ac3777f3f947c1721929c29503ded665",
+      "lastModificationDate": 1739957513103,
+      "contentHash": "bd439f5afb5c73cfdccb40fdef9cc0d1",
       "sourceName": "contracts/FootballTeam.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -479,8 +479,8 @@
       ]
     },
     "C:\\Users\\fadid\\OneDrive\\Bureau\\5BLOC\\contracts\\PlayerNFT.sol": {
-      "lastModificationDate": 1739911487527,
-      "contentHash": "e23d332835085040fa09894edf7e995f",
+      "lastModificationDate": 1739957527514,
+      "contentHash": "001b77e17962dc89f23fc0fd69abe8ec",
       "sourceName": "contracts/PlayerNFT.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -507,7 +507,8 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./FootballTeam.sol"
       ],
       "versionPragmas": [
         "^0.8.19"

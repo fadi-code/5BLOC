@@ -1,24 +1,27 @@
+require("dotenv").config(); // Charger les variables d'environnement
+
 const hre = require("hardhat");
 
 async function main() {
-    const [deployer] = await hre.ethers.getSigners();
-    console.log("🚀 Utilisation du compte:", deployer.address);
+    const contractAddress = process.env.FOOTBALL_TEAM_CONTRACT_ADDRESS; // Récupérer l'adresse du contrat FootballTeam
+    
+    // Vérifier si l'adresse est définie
+    if (!contractAddress) {
+        console.error("🚨 Erreur: L'adresse du contrat n'est pas définie dans les variables d'environnement.");
+        process.exit(1);
+    }
 
-    const contractAddress = "ADRESSE_DU_CONTRAT_FOOTBALLTEAM"; // Remplace par l'adresse du contrat déployé
     const FootballTeam = await hre.ethers.getContractAt("FootballTeam", contractAddress);
-
-    const teamAddresses = await FootballTeam.getAllTeams();
+    const teamAddresses = await FootballTeam.getAllTeamAddresses();
     console.log("📋 Liste des équipes créées :");
 
     for (const address of teamAddresses) {
-        const team = await FootballTeam.getTeamDetails(address);
-        console.log(`⚽ Équipe : ${team[0]}, 🏠 Propriétaire : ${team[1]}, 👥 Joueurs : ${team[2]}`);
+        const [name, owner, playerCount] = await FootballTeam.getTeamDetails(address);
+        console.log(`⚽ Équipe : ${name}, 🏠 Propriétaire : ${owner}, 👥 Joueurs : ${playerCount}`);
     }
 }
 
-main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error("🚨 Erreur:", error);
-        process.exit(1);
-    });
+main().catch((error) => {
+    console.error("🚨 Erreur:", error);
+    process.exit(1);
+});
