@@ -1,32 +1,33 @@
 const hre = require("hardhat");
 
 async function main() {
+    await hre.run("compile"); // Compilation des contrats avant déploiement
+
     const [deployer] = await hre.ethers.getSigners();
-    console.log("Deploying contracts with the account:", deployer.address);
+    console.log("🚀 Déploiement avec le compte:", deployer.address);
 
-    try {
-        // Déployer FootballTeam
-        const FootballTeam = await hre.ethers.getContractFactory("FootballTeam");
-        const footballTeam = await FootballTeam.deploy();
-        await footballTeam.waitForDeployment(); // 🔹 Utiliser waitForDeployment()
-        console.log("✅ FootballTeam contract deployed to:", await footballTeam.getAddress());
+    // Déploiement du contrat FootballTeam
+    console.log("📢 Déploiement de FootballTeam en cours...");
+    const FootballTeam = await hre.ethers.getContractFactory("FootballTeam");
+    const footballTeam = await FootballTeam.deploy();
+    await footballTeam.waitForDeployment(); // Attente de la confirmation du déploiement
+    const footballTeamAddress = await footballTeam.getAddress();
+    console.log("✅ FootballTeam déployé à l'adresse:", footballTeamAddress);
 
-        // Déployer PlayerNFT
-        const PlayerNFT = await hre.ethers.getContractFactory("PlayerNFT");
-        const playerNFT = await PlayerNFT.deploy();
-        await playerNFT.waitForDeployment();
-        console.log("✅ PlayerNFT contract deployed to:", await playerNFT.getAddress());
+    // Déploiement du contrat PlayerNFT
+    console.log("📢 Déploiement de PlayerNFT en cours...");
+    const PlayerNFT = await hre.ethers.getContractFactory("PlayerNFT");
+    const playerNFT = await PlayerNFT.deploy();
+    await playerNFT.waitForDeployment();
+    const playerNFTAddress = await playerNFT.getAddress();
+    console.log("✅ PlayerNFT déployé à l'adresse:", playerNFTAddress);
 
-    } catch (error) {
-        console.error("🚨 Erreur lors du déploiement:", error);
-        process.exit(1);
-    }
+    console.log("🎉 Tous les contrats ont été déployés avec succès !");
 }
 
-// Exécuter le script
 main()
     .then(() => process.exit(0))
     .catch((error) => {
-        console.error("🚨 Une erreur s'est produite:", error);
+        console.error("🚨 Erreur de déploiement:", error);
         process.exit(1);
     });

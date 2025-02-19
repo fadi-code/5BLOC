@@ -1,0 +1,16 @@
+{
+    "name": "Lionel Messi",
+    "description": "L'un des meilleurs joueurs de football du monde.",
+    "image": "https://ipfs.io/ipfs/bafkreiauzpjzt4dirhwaho6wwvmibvcg4vu5hqf7lc2gom3xhhllq2kg7e", 
+    "attributes": [
+      {
+        "trait_type": "Position",
+        "value": "Attacker"
+      },
+      {
+        "trait_type": "Country",
+        "value": "Argentina"
+      }
+    ]
+  }
+  

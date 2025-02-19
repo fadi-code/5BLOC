@@ -1,0 +1,11 @@
+🚀 Déploiement avec le compte: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+✅ FootballTeam contract déployé à: 0xa513E6E4b8f2a923D98304ec87F64353C4D5C853
+✅ PlayerNFT contract déployé à: 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
+
+
+-------------pinata------------------------
+API key :05e92be9002154efb4f8
+API secret : 52e6d2ab20e963074c45cead5eedfddeb09ec51d199f9be425b8919334a34cd9
+---------------------------------------------------
+
+
