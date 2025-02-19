@@ -1,33 +1,19 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-    await hre.run("compile"); // Compilation des contrats avant déploiement
+  const [deployer] = await ethers.getSigners(); // ✅ Premier compte Hardhat
 
-    const [deployer] = await hre.ethers.getSigners();
-    console.log("🚀 Déploiement avec le compte:", deployer.address);
+  console.log("Déploiement avec le compte :", deployer.address);
+  
+  const SimplePlayerCard = await ethers.getContractFactory("SimplePlayerCard");
+  const playerCard = await SimplePlayerCard.deploy(); // ✅ Pas besoin de passer d'admin en paramètre
 
-    // Déploiement du contrat FootballTeam
-    console.log("📢 Déploiement de FootballTeam en cours...");
-    const FootballTeam = await hre.ethers.getContractFactory("FootballTeam");
-    const footballTeam = await FootballTeam.deploy();
-    await footballTeam.waitForDeployment(); // Attente de la confirmation du déploiement
-    const footballTeamAddress = await footballTeam.getAddress();
-    console.log("✅ FootballTeam déployé à l'adresse:", footballTeamAddress);
-
-    // Déploiement du contrat PlayerNFT
-    console.log("📢 Déploiement de PlayerNFT en cours...");
-    const PlayerNFT = await hre.ethers.getContractFactory("PlayerNFT");
-    const playerNFT = await PlayerNFT.deploy();
-    await playerNFT.waitForDeployment();
-    const playerNFTAddress = await playerNFT.getAddress();
-    console.log("✅ PlayerNFT déployé à l'adresse:", playerNFTAddress);
-
-    console.log("🎉 Tous les contrats ont été déployés avec succès !");
+  await playerCard.waitForDeployment();
+  console.log("Contrat déployé à :", await playerCard.getAddress());
+  console.log(" Admin du contrat :", deployer.address);
 }
 
-main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error("🚨 Erreur de déploiement:", error);
-        process.exit(1);
-    });
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
