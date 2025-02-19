@@ -1,0 +1,6 @@
+exit
+await FootballTeam.createTeam("FC Barcelone");
+console.log(team);
+const team = await FootballTeam.teams("0x6138a986D932cB65Fc5281ecB8dF6E00e9F01e0c"); // Adresse du créateur d'équipe
+await FootballTeam.createTeam("Real Madrid");
+const FootballTeam = await ethers.getContractAt("FootballTeam", "0xC29c423b37F5cfDA8b0492C6Ae73937A7182502a")
