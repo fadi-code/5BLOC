@@ -38,7 +38,9 @@ const CreateCardModal = ({ isOpen, closeModal }) => {
     setUploading(true);
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, PlayerCardABI, signer);
+    const abi = PlayerCardABI.abi;
+
+    const contract = new ethers.Contract(contractAddress, abi, signer);
 
     const ipfsUri = await uploadToIPFS();
 
