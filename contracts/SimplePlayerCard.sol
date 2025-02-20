@@ -12,6 +12,7 @@ contract SimplePlayerCard is ERC721, Ownable {
         string hash;
         uint256 createdAt;
         bool isLocked;
+        uint256 lastPurchaseTime; // Stocke le dernier achat
     }
 
     mapping(uint256 => Card) public cards;
@@ -20,6 +21,7 @@ contract SimplePlayerCard is ERC721, Ownable {
     address private admin;
     uint256 public constant MAX_CARDS_PER_WALLET = 10;
     uint256 public constant MAX_LOCKED_CARDS = 5;
+    uint256 public constant PURCHASE_COOLDOWN = 180; // Temps d'attente en secondes (3 minutes)
 
     event CardCreated(uint256 indexed cardId, string name, string cardType, uint256 value, string hash, address indexed owner);
     event CardPurchased(address indexed buyer, uint256 cardId, uint256 oldPrice, uint256 newPrice);
@@ -54,7 +56,8 @@ contract SimplePlayerCard is ERC721, Ownable {
             value: _value,
             hash: _hash,
             createdAt: block.timestamp,
-            isLocked: false
+            isLocked: false,
+            lastPurchaseTime: 0
         });
 
         _mint(msg.sender, cardId);
@@ -68,21 +71,27 @@ contract SimplePlayerCard is ERC721, Ownable {
         require(seller != msg.sender, "Vous ne pouvez pas acheter votre propre carte !");
         require(!cards[cardId].isLocked, "Cette carte est bloquee par son proprietaire !");
         require(msg.value >= cards[cardId].value, "Fonds insuffisants !");
+        
+        // Verification du temps d'attente
+        require(block.timestamp >= cards[cardId].lastPurchaseTime + PURCHASE_COOLDOWN, "Cette carte ne peut pas etre achetee pour le moment !");
 
         uint256 currentPrice = cards[cardId].value;
-        uint256 priceIncrease = getPriceIncrease(cards[cardId].cardType) ;
+        uint256 priceIncrease = getPriceIncrease(cards[cardId].cardType);
 
         // Transfert du paiement au vendeur
         payable(seller).transfer(currentPrice);
 
-        // Transfert de la carte à l'acheteur
+        // Transfert de la carte a l'acheteur
         _transfer(seller, msg.sender, cardId);
 
-        // Mise à jour du propriétaire
+        // Mise a jour du proprietaire
         ownerCards[msg.sender].push(cardId);
 
         // Augmentation de la valeur de la carte
         cards[cardId].value = currentPrice + priceIncrease;
+        
+        // Mise a jour du dernier achat
+        cards[cardId].lastPurchaseTime = block.timestamp;
 
         emit CardPurchased(msg.sender, cardId, currentPrice, cards[cardId].value);
     }
@@ -98,6 +107,13 @@ contract SimplePlayerCard is ERC721, Ownable {
             return 8;
         }
         return 0;
+    }
+
+    function getTimeUntilNextPurchase(uint256 cardId) public view returns (uint256) {
+        if (block.timestamp >= cards[cardId].lastPurchaseTime + PURCHASE_COOLDOWN) {
+            return 0; // Achat possible immediatement
+        }
+        return (cards[cardId].lastPurchaseTime + PURCHASE_COOLDOWN) - block.timestamp;
     }
 
     function toggleCardLock(uint256 cardId) public {
@@ -141,6 +157,7 @@ contract SimplePlayerCard is ERC721, Ownable {
 
         return availableCards;
     }
+
     function cardCount() public view returns (uint256) {
         return _nextCardId;
     }
