@@ -1,0 +1,24 @@
+/* [project]/src/app/globals.css [app-client] (css) */
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+@keyframes gradientFlow {
+  0%, 100% {
+    background-position: 0%;
+  }
+
+  50% {
+    background-position: 100%;
+  }
+}
+
+.animate-gradient {
+  background: linear-gradient(124deg, #afcbff, #5c76a6, #afcbff, #738ec1, #3d5681, #637dac, #486396, #809bd2);
+  background-size: 300% 300%;
+  animation: 30s infinite gradientFlow;
+}
+
+/*# sourceMappingURL=src_app_globals_b52d8e.css.map*/
