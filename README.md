@@ -23,7 +23,7 @@ Ce projet est conçu pour fonctionner avec **Hardhat**, **MetaMask** et un **ré
 
 Avant de commencer, assurez-vous d'avoir installé :  
 
-- 🟢 **Node.js** et **npm** (ou **yarn**)  
+- 🟢 **Node.js** et **npm**   
 - 🟢 **Hardhat**  
 - 🟢 **MetaMask** (Extension pour interagir avec le contrat)  
 - 🟢 **Un éditeur de code** (**VS Code** recommandé)  
@@ -34,17 +34,15 @@ Avant de commencer, assurez-vous d'avoir installé :
 
 ### 🔹 **1️⃣ Cloner le projet**  
 ```sh
-git clone https://github.com/votre-repo/SimplePlayerCard.git
-cd SimplePlayerCard
+git clone https://github.com/fadi-code/5BLOC
+cd 5BLOC
+
 🔹 2️⃣ Installer les dépendances
-sh
-Copier
-Modifier
-npm install
+```sh
+npm i
 🔹 3️⃣ Lancer un réseau local Hardhat
-sh
-Copier
-Modifier
+```sh
+
 npx hardhat node
 🔹 4️⃣ Déployer le contrat en local
 Dans un autre terminal :
